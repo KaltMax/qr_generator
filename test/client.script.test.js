@@ -63,9 +63,6 @@ describe('Client-side script tests', () => {
       blob: async () => new Blob([], { type: 'image/png' }),
     });
   
-    // If you want to treat it like a browser environment, do:
-    // window.fetch = fetchMock;
-    // If you want to keep it on the Node global, do:
     global.fetch = fetchMock;
   
     // 2. Fill in the form so it's not empty...
