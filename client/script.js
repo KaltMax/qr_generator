@@ -93,7 +93,7 @@ document.getElementById('modal-form').addEventListener('submit', function (e) {
 
     // Create a label element and append it to the new input div
     const newLabel = document.createElement('label');
-    newLabel.className = 'block text-sm font-bold text-white';
+    newLabel.className = 'block text-m font-bold text-white';
     newLabel.innerText = label;
     newInputDiv.appendChild(newLabel);
 
@@ -105,7 +105,7 @@ document.getElementById('modal-form').addEventListener('submit', function (e) {
     const newInput = document.createElement('input');
     newInput.type = type;
     newInput.name = label.toLowerCase().replace(/\s+/g, '-'); // Use label as name
-    newInput.className = 'mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500';
+    newInput.className = 'text-white bg-[#111827] mt-1 block w-full px-4 py-2 border border-[#111827] rounded-md focus:ring-blue-500 focus:border-blue-500';
     newInput.placeholder = `Enter ${newInput.type} value`;
     newInput.required = true;
 
@@ -120,7 +120,7 @@ document.getElementById('modal-form').addEventListener('submit', function (e) {
     // Create a delete button and append it to the input container div
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
-    deleteButton.className = 'ml-2 bg-red-800 hover:bg-red-600 text-white py-1 px-2 rounded-md';
+    deleteButton.className = 'shadow-lg focus:shadow-outline focus:outline-none ml-2 bg-red-800 hover:bg-red-600 text-white py-1 px-2 rounded-md';
     deleteButton.innerText = 'Delete';
     deleteButton.addEventListener('click', function () {
         form.removeChild(newInputDiv);
