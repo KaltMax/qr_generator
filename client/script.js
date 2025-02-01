@@ -2,23 +2,25 @@
 document.getElementById('qr-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    // Get the form data
-    const formData = new FormData(document.getElementById('qr-form'));
-    const data = {};
+    // Select only the dynamic inputs added via the modal
+    const dynamicInputs = document.querySelectorAll('#qr-form input.dynamic-input');
 
-    // Save the form data in an object
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    // Check if the form data is empty
-    if (Object.keys(data).length === 0) {
+    // Check if there are any dynamic inputs
+    if (dynamicInputs.length === 0) {
         const errorModal = document.getElementById('error-modal');
-        const errorMessage = document.getElementById('error-message'); // Now this is unique
+        const errorMessage = document.getElementById('error-message');
         errorMessage.innerText = 'Please add some input fields.';
+        // Remove any hidden class from the error message element
+        errorMessage.classList.remove('hidden');
         errorModal.classList.remove('hidden');
         return;
     }
+
+    // Build a data object only from the dynamic inputs
+    const data = {};
+    dynamicInputs.forEach(input => {
+        data[input.name] = input.value;
+    });
 
     // Get the base URL
     const baseUrl = window.location.origin;
@@ -54,15 +56,14 @@ document.getElementById('qr-form').addEventListener('submit', function (e) {
         })
         .catch(error => {
             console.error('Error generating QR code:', error); // Log the actual error
-        
-            // Show error modal **only if there's an actual error**
+
+            // Show error modal only if there's an actual error
             const errorModal = document.getElementById('error-modal');
             const errorMessage = document.getElementById('error-message');
-        
             errorMessage.innerText = 'An error occurred while generating the QR code.';
+            errorMessage.classList.remove('hidden');
             errorModal.classList.remove('hidden');
         });
-        
 });
 
 // Get the add input button and listen for click event
@@ -75,7 +76,7 @@ document.getElementById('close-modal').addEventListener('click', function () {
     document.getElementById('input-modal').classList.add('hidden');
 });
 
-// Fix: Remove extra parentheses in `getElementById`
+// Remove extra parentheses fix: listen for click on the error close button
 document.getElementById('close-error').addEventListener('click', function () {
     document.getElementById('error-modal').classList.add('hidden');
 });
@@ -101,11 +102,11 @@ document.getElementById('modal-form').addEventListener('submit', function (e) {
     const inputContainer = document.createElement('div');
     inputContainer.className = 'flex items-center space-x-2';
 
-    // Create a new input element and append it to the input container div
+    // Create a new input element, add the dynamic-input class, and append it to the input container div
     const newInput = document.createElement('input');
     newInput.type = type;
     newInput.name = label.toLowerCase().replace(/\s+/g, '-'); // Use label as name
-    newInput.className = 'text-white bg-[#111827] mt-1 block w-full px-4 py-2 border border-[#111827] rounded-md focus:ring-blue-500 focus:border-blue-500 focus:outline-none';
+    newInput.className = 'dynamic-input text-white bg-[#111827] mt-1 block w-full px-4 py-2 border border-[#111827] rounded-md focus:ring-blue-500 focus:border-blue-500 focus:outline-none';
     newInput.placeholder = `Enter ${newInput.type} value`;
     newInput.required = true;
 
@@ -123,21 +124,25 @@ document.getElementById('modal-form').addEventListener('submit', function (e) {
     deleteButton.className = 'shadow-lg focus:shadow-outline focus:outline-none ml-2 bg-red-800 hover:bg-red-600 text-white py-1 px-2 rounded-md';
     deleteButton.innerText = 'Delete';
     deleteButton.addEventListener('click', function () {
+        // Remove the entire newInputDiv from the form
         form.removeChild(newInputDiv);
+        // Hide the QR code section and reset messages
         document.getElementById('qr-code').classList.add('hidden');
         document.getElementById('qr-result').innerHTML = '';
         document.getElementById('success-message').classList.add('hidden');
-        document.getElementById('error-message').classList.add('hidden');
+        // Optionally, clear any error message text (or hiding it)...
+        // document.getElementById('error-message').innerText = '';
+        // Instead of hiding the error-message here, let the submission process show it properly.
     });
 
     // Append the delete button to the input container div
     inputContainer.appendChild(deleteButton);
     newInputDiv.appendChild(inputContainer);
 
-    // Insert the new input div before the last element in the form
+    // Insert the new input div before the element with class ".mt-4" in the form
     form.insertBefore(newInputDiv, form.querySelector('.mt-4'));
 
-    // Close the modal and reset the form
+    // Close the modal and reset the modal form
     document.getElementById('input-modal').classList.add('hidden');
     document.getElementById('modal-form').reset();
 });
