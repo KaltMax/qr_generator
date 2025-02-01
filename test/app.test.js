@@ -1,7 +1,7 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const app = require('../server/app'); // Import the app
+const app = require('../server/app');
 
 describe('App Tests', () => {
   let server;

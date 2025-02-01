@@ -11,8 +11,11 @@ describe('Client-side script tests', () => {
   beforeEach(() => {
     document.documentElement.innerHTML = html.toString();
     require('../client/script.js'); // Require the script to attach event listeners
+  
+    // Mock URL.createObjectURL to return a fake URL stringn
+    global.URL.createObjectURL = jest.fn(() => "blob:http://localhost/dummy");
   });
-
+  
   afterEach(() => {
     jest.resetModules();
   });
@@ -46,15 +49,22 @@ describe('Client-side script tests', () => {
     expect(newInput).toBeNull();
   });
 
-  test('should display an alert if the form is submitted with empty data', () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
-
+  test('should display an error message if the form is submitted with empty data', () => {
     const form = document.getElementById('qr-form');
-    const submitEvent = new Event('submit');
-    form.dispatchEvent(submitEvent);
-
-    expect(alertMock).toHaveBeenCalledWith('Please enter some data');
-    alertMock.mockRestore();
+    const errorModal = document.getElementById('error-modal');
+    const errorMessage = document.getElementById('error-message');
+  
+    // Ensure form and error modal exist
+    expect(form).not.toBeNull();
+    expect(errorModal).not.toBeNull();
+    expect(errorMessage).not.toBeNull();
+  
+    // Dispatch submit event
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  
+    // Check that the error message is displayed
+    expect(errorModal.classList.contains('hidden')).toBe(false);
+    expect(errorMessage.innerText).toBe('Please add some input fields.');
   });
 
   test('should call fetch with correct data and display QR code on success', async () => {

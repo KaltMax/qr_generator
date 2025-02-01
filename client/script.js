@@ -105,7 +105,7 @@ document.getElementById('modal-form').addEventListener('submit', function (e) {
     const newInput = document.createElement('input');
     newInput.type = type;
     newInput.name = label.toLowerCase().replace(/\s+/g, '-'); // Use label as name
-    newInput.className = 'text-white bg-[#111827] mt-1 block w-full px-4 py-2 border border-[#111827] rounded-md focus:ring-blue-500 focus:border-blue-500';
+    newInput.className = 'text-white bg-[#111827] mt-1 block w-full px-4 py-2 border border-[#111827] rounded-md focus:ring-blue-500 focus:border-blue-500 focus:outline-none';
     newInput.placeholder = `Enter ${newInput.type} value`;
     newInput.required = true;
 
