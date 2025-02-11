@@ -64,7 +64,7 @@ describe('Client-side script tests', () => {
   
     // Check that the error message is displayed
     expect(errorModal.classList.contains('hidden')).toBe(false);
-    expect(errorMessage.innerText).toBe('Please add some input fields.');
+    expect(errorMessage.innerText).toBe('Please add at least one input field.');
   });
 
   test('should call fetch with correct data and display QR code on success', async () => {
@@ -81,6 +81,7 @@ describe('Client-side script tests', () => {
     nameInput.type = 'text';
     nameInput.name = 'username';
     nameInput.value = 'John Doe';
+    nameInput.classList.add('dynamic-input');
     form.appendChild(nameInput);
   
     // 3. Dispatch the submit event
@@ -145,5 +146,77 @@ describe('Client-side script tests', () => {
     expect(document.getElementById('input-label').value).toBe('');
     expect(document.getElementById('input-type').value).toBe('text');
   });
-  
+
+  test('should set download button attributes correctly when QR code is generated', async () => {
+    // Mock fetch response
+    const fetchMock = jest.fn().mockResolvedValueOnce({
+        blob: async () => new Blob([], { type: 'image/png' }),
+    });
+    global.fetch = fetchMock;
+
+    // Fill in the form to prevent validation errors
+    const form = document.getElementById('qr-form');
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.name = 'username';
+    nameInput.value = 'John Doe';
+    nameInput.classList.add('dynamic-input');
+    form.appendChild(nameInput);
+
+    // Dispatch form submit event
+    form.dispatchEvent(new Event('submit'));
+
+    // Wait for microtask queue to clear
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Verify that fetch was called
+    expect(fetchMock).toHaveBeenCalled();
+
+    // Get the QR image and download button
+    const qrImage = document.querySelector('#qr-result img');
+    const downloadButton = document.getElementById('download-button');
+
+    // Ensure the image and download button exist
+    expect(qrImage).not.toBeNull();
+    expect(downloadButton).not.toBeNull();
+
+    // Ensure the download button has the correct attributes
+    expect(downloadButton.href).toContain("blob:http://localhost"); // Should be a blob URL
+    expect(downloadButton.download).toBe('qrcode.png');
+  });
+
+  test('should display error message when QR code generation fails', async () => {
+    // Mock fetch to reject (simulate an error)
+    const fetchMock = jest.fn().mockRejectedValueOnce(new Error('Network error'));
+    global.fetch = fetchMock;
+
+    // Fill in the form with a test input
+    const form = document.getElementById('qr-form');
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.name = 'username';
+    nameInput.value = 'John Doe';
+    nameInput.classList.add('dynamic-input');
+    form.appendChild(nameInput);
+
+    // Submit the form to trigger fetch request
+    form.dispatchEvent(new Event('submit'));
+
+    // Wait for microtask queue to clear
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Ensure fetch was called
+    expect(fetchMock).toHaveBeenCalled();
+
+    // Get error modal and message elements
+    const errorModal = document.getElementById('error-modal');
+    const errorMessage = document.getElementById('error-message');
+
+    // Check if error modal is displayed
+    expect(errorModal.classList.contains('hidden')).toBe(false);
+
+    // Ensure the correct error message is displayed
+    expect(errorMessage.innerText).toBe('An error occurred while generating the QR code.');
+  });
+
 });
