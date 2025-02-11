@@ -33,66 +33,69 @@ document.getElementById('qr-form').addEventListener('submit', function (e) {
         },
         body: JSON.stringify({ data }),
     })
-        // Get the response as a blob and create an image element with the QR code
-        .then(response => response.blob())
-        .then(blob => {
-            const qrResultDiv = document.getElementById('qr-result');
-            let qrImage = qrResultDiv.querySelector('img'); // Find existing image
+    // Get the response as a blob and create an image element with the QR code
+    .then(response => response.blob())
+    .then(blob => {
+        const qrResultDiv = document.getElementById('qr-result');
+        let qrImage = qrResultDiv.querySelector('img'); // Find existing image
 
-            if (!qrImage) {
-                qrImage = document.createElement('img');
-                qrResultDiv.appendChild(qrImage); // Only append if it doesn't exist
-            }
+        if (!qrImage) {
+            qrImage = document.createElement('img');
+            qrResultDiv.appendChild(qrImage); // Only append if it doesn't exist
+        }
 
-            qrImage.src = URL.createObjectURL(blob); // Update QR code image
+        qrImage.src = URL.createObjectURL(blob); // Update QR code image
 
-            // Show the success message
-            const successMessage = document.getElementById('success-message');
-            successMessage.innerText = 'QR-Code generated successfully!';
-            successMessage.classList.remove('hidden'); // Make it visible
-            // Timeout to hide the success message after 3 seconds
-            setTimeout(() => {
-                successMessage.classList.add('hidden');
-            }, 3000);
+        // Show the success message
+        const successMessage = document.getElementById('success-message');
+        successMessage.innerText = 'QR-Code generated successfully!';
+        successMessage.classList.remove('hidden'); // Make it visible
+        // Timeout to hide the success message after 3 seconds
+        setTimeout(() => {
+            successMessage.classList.add('hidden');
+        }, 3000);
 
-            // Show the QR code section
-            document.getElementById('qr-code').classList.remove('hidden');
+        // Show the QR code section
+        document.getElementById('qr-code').classList.remove('hidden');
 
-            // Add a download button to the QR code section
-            const downloadButton = document.getElementById('download-button');
-            downloadButton.classList.remove('hidden');
-            downloadButton.href = qrImage.src; // Set the download link to the QR code image
-            downloadButton.download = 'qrcode.png'; // Set the download filename
-            
-            // Add a click event listener to the download button
-            downloadButton.addEventListener('click', function () {
-                // Show a success message when the QR code is downloaded
+        // Set up the download button
+        const downloadButton = document.getElementById('download-button');
+        downloadButton.classList.remove('hidden');
+        downloadButton.href = qrImage.src;
+        downloadButton.download = 'qrcode.png';
+
+        // Add click event to handle download success and errors
+        downloadButton.addEventListener('click', function () {
+            try {
+                // Attempt to trigger the download
                 const downloadMessage = document.getElementById('download-message');
                 downloadMessage.innerText = 'QR-Code downloaded successfully!';
-                downloadMessage.classList.remove('hidden'); // Make it visible
-
-                // Hide the message after 3 seconds
+                downloadMessage.classList.remove('hidden');
                 setTimeout(() => {
                     downloadMessage.classList.add('hidden');
                 }, 3000);
-            })
-            .catch(error => {
-                // Show error modal only if there's an actual error
+            } catch (error) {
+                console.error('Error downloading QR code:', error);
+
+                // Show error modal when download fails
                 const errorModal = document.getElementById('error-modal');
                 const errorMessage = document.getElementById('error-message');
-                errorMessage.innerText = 'An error occurred while generating the QR code.';
+                errorMessage.innerText = 'An error occurred while downloading the QR code.';
                 errorMessage.classList.remove('hidden');
                 errorModal.classList.remove('hidden');
-            });
-        })
-        .catch(error => {
-            // Show error modal only if there's an actual error
-            const errorModal = document.getElementById('error-modal');
-            const errorMessage = document.getElementById('error-message');
-            errorMessage.innerText = 'An error occurred while generating the QR code.';
-            errorMessage.classList.remove('hidden');
-            errorModal.classList.remove('hidden');
+            }
         });
+    })
+    .catch(error => {
+    console.error('Error generating QR code:', error);
+
+    // Show error modal only if there's an actual error in generation
+    const errorModal = document.getElementById('error-modal');
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.innerText = 'An error occurred while generating the QR code.';
+    errorMessage.classList.remove('hidden');
+    errorModal.classList.remove('hidden');
+    });
 });
 
 // Get the add input button and listen for click event
