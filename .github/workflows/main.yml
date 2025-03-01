@@ -59,15 +59,16 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u kaltmax --password-stdin
 
       - name: Build and Tag Docker Image
         run: |
-          IMAGE_NAME="ghcr.io/${{ github.repository }}/qr_generator"
+          IMAGE_NAME="ghcr.io/kaltmax/qr_generator"
           docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:${{ github.sha }}" .
-      
+
       - name: Push Docker Image to GHCR
         run: |
-          IMAGE_NAME="ghcr.io/${{ github.repository }}/qr_generator"
+          IMAGE_NAME="ghcr.io/kaltmax/qr_generator"
           docker push "$IMAGE_NAME:latest"
           docker push "$IMAGE_NAME:${{ github.sha }}"
+
