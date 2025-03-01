@@ -5,32 +5,33 @@ QR-Code Generator is a simple and efficient web application that allows users to
 ## Installation
 
 1. Clone the gitHub repository
-    - git clone https://github.com/KaltMax/qr_generator.git
 
+   - git clone https://github.com/KaltMax/qr_generator.git
 2. Install the dependencies
-    - npm install
 
+   - npm install
 3. Start the server
-    - npm start
 
+   - npm start
 4. Open the application in your browser
-    - http://localhost:3000
+
+   - http://localhost:3000
 
 ## Linting, Testing, and Code Coverage
 
 1. Lint the code
-    - npm run lint
 
+   - npm run lint
 2. Run the tests and display the code coverage
-    - npm run test
 
-## Docker and gitLab CI/CD
+   - npm run test
 
-The App comes with a Dockerfile and a gitLab CI/CD configuration file and thus is ready to be deployed on a containerized environment.
+## Docker, Gitlab CI, GitHub Actions
+
+The App comes with a Dockerfile, a GitLab CI/CD and GitHub Actions configuration file and thus is ready to be deployed on a containerized environment.
 
 ## Technologies
 
 - Node.js
 - Express.js
 - Tailwind CSS
-
