@@ -186,10 +186,12 @@ describe('Client-side script tests', () => {
   });
 
   test('should display error message when QR code generation fails', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  
     // Mock fetch to reject (simulate an error)
     const fetchMock = jest.fn().mockRejectedValueOnce(new Error('Network error'));
     global.fetch = fetchMock;
-
+  
     // Fill in the form with a test input
     const form = document.getElementById('qr-form');
     const nameInput = document.createElement('input');
@@ -198,25 +200,31 @@ describe('Client-side script tests', () => {
     nameInput.value = 'John Doe';
     nameInput.classList.add('dynamic-input');
     form.appendChild(nameInput);
-
+  
     // Submit the form to trigger fetch request
     form.dispatchEvent(new Event('submit'));
-
+  
     // Wait for microtask queue to clear
     await new Promise((resolve) => setTimeout(resolve, 100));
-
+  
     // Ensure fetch was called
     expect(fetchMock).toHaveBeenCalled();
-
+  
     // Get error modal and message elements
     const errorModal = document.getElementById('error-modal');
     const errorMessage = document.getElementById('error-message');
-
+  
     // Check if error modal is displayed
     expect(errorModal.classList.contains('hidden')).toBe(false);
-
+  
     // Ensure the correct error message is displayed
     expect(errorMessage.innerText).toBe('An error occurred while generating the QR code.');
+  
+    // Assert that console.error was called with the expected error
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error generating QR code:', expect.any(Error));
+  
+    // Clean up
+    consoleErrorSpy.mockRestore();
   });
 
 });

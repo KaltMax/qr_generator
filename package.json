@@ -16,14 +16,17 @@
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "punycode": "^2.3.1",
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
-    "eslint": "^8.50.0",
+    "@eslint/eslintrc": "^3.3.0",
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
     "eslint-plugin-jest": "^28.11.0",
-    "jest": "^29.6.2",
+    "globals": "^16.0.0",
+    "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0"
-
   },
   "jest": {
     "testEnvironment": "node",
