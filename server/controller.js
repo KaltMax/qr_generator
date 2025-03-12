@@ -4,7 +4,6 @@ exports.generateQR = async (req, res) => {
     try {
         const { data } = req.body;
 
-        // Validate the data
         if (!data || Object.values(data).some(value => !value.trim())) {
             return res.status(400).send({ error: 'Invalid data. All fields must be filled.' });
         }
