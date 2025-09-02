@@ -13,9 +13,12 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default [...compat.extends("eslint:recommended", "plugin:jest/recommended"),{
-    // Add the ignores property here to exclude files or directories
-    ignores: ["coverage/**"],
+export default [
+    {
+        ignores: ["coverage/**", "client-build/**", "node_modules/**", "client/dist/**", "client/node_modules/**"]
+    },
+    ...compat.extends("eslint:recommended", "plugin:jest/recommended"),
+    {
     plugins: {
         jest,
     },

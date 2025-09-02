@@ -1,20 +1,25 @@
-# Define the base image
 FROM node:22.15.1-alpine
 
-# Define the working directory
+# Set up the backend working directory and install dependencies
 WORKDIR /app
-
-# Copy the package.json & lockfile from the root
 COPY package*.json ./
-
-# Install dependencies in /app/node_modules
 RUN npm install
 
-# Copy all your project files into /app
+# Set up the frontend working directory and install dependencies
+WORKDIR /app/client
+COPY client/package*.json ./
+RUN npm install
+
+# Copy the entire project into the container
+WORKDIR /app
 COPY . .
 
-# Expose port 3000 for the express server
+# Build the React frontend
+WORKDIR /app/client
+RUN npm run build
+
+# Expose the backend server port
 EXPOSE 3000
 
-# Run the express server
+# Start the backend server
 CMD ["node", "server/app.js"]
