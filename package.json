@@ -4,8 +4,8 @@
   "main": "server/app.js",
   "scripts": {
     "start": "node server/app.js",
-    "build": "echo 'No build step required for this project.'",
-    "lint": "eslint . --ext .js",
+    "build": "cd client && npm run build",
+    "lint": "eslint . && cd client && npm run lint",
     "test": "jest --coverage"
   },
   "keywords": [],
