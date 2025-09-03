@@ -18,6 +18,9 @@ COPY . .
 WORKDIR /app/client
 RUN npm run build
 
+# Switch back to app directory for server
+WORKDIR /app
+
 # Expose the backend server port
 EXPOSE 3000
 

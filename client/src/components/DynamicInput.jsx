@@ -17,8 +17,7 @@ function DynamicInput({ input, onDelete, onChange }) {
           value={input.value}
           onChange={handleInputChange}
           className="dynamic-input text-white bg-[#111827] mt-1 block w-full px-4 py-2 border border-[#111827] rounded-md focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-          placeholder={`Enter ${input.type} value`}
-          required
+          placeholder={`Enter ${input.type} value`} required
           {...(input.type === 'number' ? { step: 'any' } : {})}
         />
         <button

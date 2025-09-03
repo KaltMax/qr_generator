@@ -11,7 +11,7 @@ function InputModal({ isOpen, onClose, onAddInput }) {
     if (!label.trim()) return;
 
     const newInput = {
-      id: Date.now(), // Simple ID generation
+      id: Date.now(),
       label: label.trim(),
       type,
       name: label.toLowerCase().replace(/\s+/g, '-'),

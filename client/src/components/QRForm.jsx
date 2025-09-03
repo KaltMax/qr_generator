@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import DynamicInput from './DynamicInput';
 import InputModal from './InputModal';
-import ErrorModal from './ErrorModal';
 import QRResult from './QRResult';
+import { toast } from 'react-toastify';
 
 function QRForm() {
   const [inputs, setInputs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const [qrImageUrl, setQrImageUrl] = useState('');
   const [showQRResult, setShowQRResult] = useState(false);
 
@@ -28,31 +26,22 @@ function QRForm() {
     );
   };
 
-  const showError = (message) => {
-    setErrorMessage(message);
-    setIsErrorModalOpen(true);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if there are any inputs
     if (inputs.length === 0) {
-      showError('Please add at least one input field.');
+      toast.error('Please add at least one input field.');
       return;
     }
 
-    // Build data object from inputs
     const data = {};
     inputs.forEach(input => {
       data[input.name] = input.value;
     });
 
     try {
-      // Get the base URL
       const baseUrl = window.location.origin;
 
-      // Send POST request to generate QR code
       const response = await fetch(`${baseUrl}/generate-qr`, {
         method: 'POST',
         headers: {
@@ -65,16 +54,16 @@ function QRForm() {
         throw new Error('Failed to generate QR code');
       }
 
-      // Get response as blob and create object URL
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       
       setQrImageUrl(imageUrl);
       setShowQRResult(true);
-
+      toast.success('QR-Code successfully generated!');
+      
     } catch (error) {
+      toast.error('An error occurred while generating the QR code.');
       console.error('Error generating QR code:', error);
-      showError('An error occurred while generating the QR code.');
     }
   };
 
@@ -125,13 +114,6 @@ function QRForm() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAddInput={handleAddInput}
-      />
-
-      {/* Error Modal */}
-      <ErrorModal
-        isOpen={isErrorModalOpen}
-        onClose={() => setIsErrorModalOpen(false)}
-        message={errorMessage}
       />
     </div>
   );

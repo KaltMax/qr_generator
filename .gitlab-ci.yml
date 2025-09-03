@@ -1,15 +1,12 @@
-# By default, we'll use a Node image for lint/test
 default:
   image: node:18-alpine
 
-# Definition of the pipeline stages
 stages:
   - build
   - lint
   - test
   - deploy
 
-# Cache node_modules
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
@@ -18,19 +15,14 @@ cache:
 # -------------- BUILD STAGE --------------
 build:
   stage: build
-  # We need docker-in-docker to build the image
   image: docker:25
   services:
     - name: docker:25-dind
-  # Enable TLS for Docker by providing a certificate directory
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   script:
-    # Docker login
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    # Build the image
     - docker build -t "$CI_REGISTRY_IMAGE:${CI_COMMIT_SHORT_SHA}" .
-    # Push the image for next stages
     - docker push "$CI_REGISTRY_IMAGE:${CI_COMMIT_SHORT_SHA}"
   only:
     - development
@@ -72,9 +64,7 @@ deploy:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
-    # Docker login
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    # Decide on the tag based on branch
     - |
       if [ "$CI_COMMIT_REF_NAME" = "development" ]; then
         export TAG="development"
@@ -84,13 +74,9 @@ deploy:
         export TAG="$CI_COMMIT_REF_NAME"
       fi
   script:
-    # Pull the image from the build stage
     - docker pull "$CI_REGISTRY_IMAGE:${CI_COMMIT_SHORT_SHA}"
-    # Tag the image with the correct tag
     - docker tag "$CI_REGISTRY_IMAGE:${CI_COMMIT_SHORT_SHA}" "$CI_REGISTRY_IMAGE:$TAG"
-    # Push the image to the registry
     - docker push "$CI_REGISTRY_IMAGE:$TAG"
-    # Example for running the container:
     - docker run -d --name my-app -p 3000:3000 "$CI_REGISTRY_IMAGE:$TAG"
   only:
     - development

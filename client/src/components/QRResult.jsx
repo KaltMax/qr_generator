@@ -1,53 +1,26 @@
 import PropTypes from 'prop-types';
-
-import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 function QRResult({ qrImageUrl, isVisible }) {
-  const [successMessage, setSuccessMessage] = useState('');
-  const [downloadMessage, setDownloadMessage] = useState('');
-
   const handleDownload = () => {
     try {
-      setDownloadMessage('QR-Code downloaded successfully!');
-      setTimeout(() => {
-        setDownloadMessage('');
-      }, 3000);
+      const link = document.createElement('a');
+      link.href = qrImageUrl;
+      link.download = 'qrcode.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success('QR-Code successfully downloaded!');
     } catch (error) {
       console.error('Error downloading QR code:', error);
-      // Error handling would be passed up to parent component
+      toast.error('An error occurred while downloading the QR code.');
     }
   };
-
-  const showSuccessMessage = () => {
-    setSuccessMessage('QR-Code generated successfully!');
-    setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
-  };
-
-  // Expose function to parent component via useEffect
-  if (qrImageUrl && !successMessage) {
-    showSuccessMessage();
-  }
 
   if (!isVisible) return null;
 
   return (
     <div className="mt-2 bg-[#374151] shadow-lg rounded-lg p-6 w-full">
-      {/* Success Message */}
-      {successMessage && (
-        <div className="mt-4 bg-green-800 text-white font-bold text-center py-2 px-4 rounded-md">
-          {successMessage}
-        </div>
-      )}
-      
-      {/* Download Message */}
-      {downloadMessage && (
-        <div className="mt-4 bg-green-800 text-white font-bold text-center py-2 px-4 rounded-md">
-          {downloadMessage}
-        </div>
-      )}
-      
       {/* QR Code */}
       <div className="mt-4 flex justify-center">
         {qrImageUrl && (
@@ -62,14 +35,12 @@ function QRResult({ qrImageUrl, isVisible }) {
       {/* Download Button */}
       <div className="mt-4">
         {qrImageUrl && (
-          <a
-            href={qrImageUrl}
-            download="qrcode.png"
+          <button
             onClick={handleDownload}
             className="block w-full shadow-lg bg-blue-800 hover:bg-blue-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded-md text-center"
           >
             Download QR Code
-          </a>
+          </button>
         )}
       </div>
     </div>
