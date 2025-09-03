@@ -14,7 +14,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
-app.use(express.static(path.join(__dirname, '..', 'client')));
+app.use(express.static(path.join(__dirname, '..', 'client-build')));
 app.use(router);
 
 if (require.main === module) {

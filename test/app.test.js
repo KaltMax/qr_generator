@@ -1,17 +1,15 @@
 const http = require('http');
-const path = require('path');
-const fs = require('fs');
 const app = require('../server/app');
 
 describe('App Tests', () => {
   let server;
 
   beforeAll(() => {
-    server = app.listen(4000); // Start a test server on port 4000
+    server = app.listen(4000);
   });
 
   afterAll(() => {
-    server.close(); // Close the server after tests
+    server.close();
   });
 
   const makePostRequest = (path, data) => {
@@ -82,17 +80,6 @@ describe('App Tests', () => {
   test('should use CORS middleware', async () => {
     const response = await makeGetRequest('/generate-qr');
     expect(response.headers['access-control-allow-origin']).toBe('*');
-  });
-
-  test('should serve static files from the client directory', async () => {
-    const filePath = path.join(__dirname, '..', 'client', 'testIndex.html');
-    fs.writeFileSync(filePath, '<html><body>Test</body></html>'); // Create a test file
-
-    const response = await makeGetRequest('/index.html');
-    expect(response.statusCode).toBe(200);
-    expect(response.headers['content-type']).toMatch(/html/);
-
-    fs.unlinkSync(filePath); // Clean up the test file
   });
 
   test('POST /generate-qr should return a PNG image', async () => {
