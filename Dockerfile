@@ -1,13 +1,18 @@
 FROM node:22.15.1-alpine
 
-# Set up the backend working directory and install dependencies
+# Set up the root workspace
 WORKDIR /app
 COPY package*.json ./
+
+# Set up the server working directory and install dependencies
+COPY server/package*.json ./server/
+WORKDIR /app/server
 RUN npm install
 
 # Set up the frontend working directory and install dependencies
+WORKDIR /app
+COPY client/package*.json ./client/
 WORKDIR /app/client
-COPY client/package*.json ./
 RUN npm install
 
 # Copy the entire project into the container

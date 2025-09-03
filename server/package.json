@@ -1,0 +1,23 @@
+{
+  "name": "qr-generator-server",
+  "version": "0.1.0",
+  "description": "Express.js backend for QR code generator",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": ["qr-code", "express", "api"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "punycode": "^2.3.1",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}

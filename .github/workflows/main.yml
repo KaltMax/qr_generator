@@ -39,9 +39,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
       - name: Install Dependencies
-        run: |
-          npm install
-          cd client && npm install
+        run: npm run install:all
       - name: Run ESLint
         run: npm run lint
 
@@ -62,9 +60,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
       - name: Install Dependencies
-        run: |
-          npm install
-          cd client && npm install
+        run: npm run install:all
       - name: Run Tests
         run: npm run test
 

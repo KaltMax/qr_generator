@@ -1,24 +1,24 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "main": "server/app.js",
+  "name": "qr-generator",
+  "version": "0.1.0",
+  "description": "QR Code Generator - Node.js application with React frontend and Express backend",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "start": "node server/app.js",
-    "build": "cd client && npm run build",
-    "lint": "eslint . && cd client && npm run lint",
-    "test": "jest --coverage"
+    "start": "npm run start --workspace=server",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "lint": "eslint . && npm run lint --workspace=client",
+    "test": "jest --coverage",
+    "install:all": "npm install && npm install --workspace=server && npm install --workspace=client"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "A simple Express.js server serving static files and API routes.",
-  "dependencies": {
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "punycode": "^2.3.1",
-    "qrcode": "^1.5.4"
-  },
+  "keywords": ["qr-code", "react", "express", "fullstack"],
+  "author": "Maximilian Kaltenreiner",
+  "license": "MIT",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.21.0",
